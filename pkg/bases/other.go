@@ -1,12 +1,21 @@
-package app
+package bases
 
+/*
+Этот пакет содержит общую структуру и некоторые дополнительные функции
+*/
 import (
 	"io"
 	"os"
 )
 
+// Структура данных таблицы, с которой нужно работать.
+type HttpHFLabs struct {
+	Code        string `db:"code"`        // HTTP-код
+	Description string `db:"description"` // Описание
+}
+
 // Получение значение из файла
-func dataFile(filename string) (string, error) {
+func DataFile(filename string) (string, error) {
 	// Открыть файл
 	fileToken, errorToken := os.Open(filename)
 	if errorToken != nil {
