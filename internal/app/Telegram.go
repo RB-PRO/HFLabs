@@ -14,6 +14,11 @@ func Run() {
 
 	fmt.Println(dataTable)
 
-	RBgoogle.Push(dataTable)
+	sheetLogin, _ := RBgoogle.NewSheets()
 
+	RBgoogle.Push(sheetLogin, dataTable)
+
+	fmt.Println(RBgoogle.Cell(sheetLogin))
+
+	RBgoogle.DelCol(sheetLogin)
 }

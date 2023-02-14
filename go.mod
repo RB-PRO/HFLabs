@@ -2,9 +2,14 @@ module github.com/RB-PRO/HFLabs
 
 go 1.20
 
-require github.com/gocolly/colly/v2 v2.1.0
+require (
+	github.com/gocolly/colly/v2 v2.1.0
+	golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be
+	gopkg.in/Iwark/spreadsheet.v2 v2.0.0-20220412131121-41eea1483964
+)
 
 require (
+	cloud.google.com/go v0.26.0 // indirect
 	github.com/PuerkitoBio/goquery v1.5.1 // indirect
 	github.com/andybalholm/cascadia v1.2.0 // indirect
 	github.com/antchfx/htmlquery v1.2.3 // indirect
