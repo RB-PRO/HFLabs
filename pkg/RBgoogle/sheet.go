@@ -67,7 +67,13 @@ func (sheet RBsheet) Cell(row, col int) string {
 
 // Удалить колонки
 func (sheet RBsheet) DelCol() error {
-	sheet.SH.DeleteColumns(0, 2)
+	//sheet.SH.DeleteColumns(0, 2) // worknt
+
+	// Замена элементов
+	for indexData := 0; indexData < 20; indexData++ {
+		sheet.SH.Update(indexData, 0, "")
+		sheet.SH.Update(indexData, 1, "")
+	}
 
 	// Синхронизация с Google Sheets
 	err := sheet.SH.Synchronize()

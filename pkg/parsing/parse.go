@@ -6,7 +6,8 @@ import (
 )
 
 // Парсинг с помощью gocolly
-func Parse() (data []bases.HttpHFLabs) {
+func Parse() (data []bases.HttpHFLabs, errorParse error) {
+
 	c := colly.NewCollector() // Экземпляр GoColly
 
 	// Срабатываем по правилу
@@ -17,6 +18,11 @@ func Parse() (data []bases.HttpHFLabs) {
 		})
 	})
 
+	// Обработка ошибки
+	c.OnError(func(r *colly.Response, err error) {
+		errorParse = err
+	})
+
 	c.Visit("https://confluence.hflabs.ru/pages/viewpage.action?pageId=1181220999")
-	return data
+	return data, errorParse
 }

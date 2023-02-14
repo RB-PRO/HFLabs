@@ -11,51 +11,6 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func TEstBot() {
-	bot, err := tgbotapi.NewBotAPI(os.Getenv("5821316325:AAHfihGQGrvw7nQ-5yC2FvzGfKhAZlwLkCQ"))
-	if err != nil {
-		log.Panic(err)
-	}
-
-	bot.Debug = true
-
-	log.Printf("Authorized on account %s", bot.Self.UserName)
-
-	u := tgbotapi.NewUpdate(0)
-	u.Timeout = 60
-
-	updates := bot.GetUpdatesChan(u)
-
-	for update := range updates {
-		if update.Message == nil { // ignore any non-Message updates
-			continue
-		}
-
-		if !update.Message.IsCommand() { // ignore any non-command Messages
-			continue
-		}
-
-		// Create a new MessageConfig. We don't have text yet,
-		// so we leave it empty.
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
-
-		// Extract the command from the Message.
-		switch update.Message.Command() {
-		case "help":
-			msg.Text = "I understand /sayhi and /status."
-		case "sayhi":
-			msg.Text = "Hi :)"
-		case "status":
-			msg.Text = "I'm ok."
-		default:
-			msg.Text = "I don't know that command"
-		}
-
-		if _, err := bot.Send(msg); err != nil {
-			log.Panic(err)
-		}
-	}
-}
 func Run() {
 
 	spreadsheetID := "1aDy5lhQV8B1ZRio_HNk02xL8qZ7g_5EqL5Q5cPj-MMU" // ID книги
@@ -74,11 +29,11 @@ func Run() {
 	}
 
 	// Запускаем бота
-	bot, errNewBot := tgbotapi.NewBotAPI(os.Getenv(tokenTelegram))
+	bot, errNewBot := tgbotapi.NewBotAPI((tokenTelegram))
 	if errNewBot != nil {
 		log.Fatalln(errNewBot)
 	}
-	bot.Debug = true
+	bot.Debug = false
 	log.Printf("Авторизовался %s", bot.Self.UserName)
 
 	// Настройка бота
@@ -109,7 +64,11 @@ func Run() {
 				"Отправь мне команду /update и будет магия :)"
 		case "update":
 			// Парсим данные
-			dataTable := parsing.Parse()
+			dataTable, dataTableErr := parsing.Parse()
+			if dataTableErr != nil {
+				msg.Text = dataTableErr.Error()
+				break
+			}
 
 			// Отчистка Колонок
 			errorDel := sheetLogin.DelCol()
@@ -125,6 +84,7 @@ func Run() {
 				break
 			}
 
+			// Объединить сообщение вывода
 			var dataMessage string
 			for _, valueData := range dataTable {
 				dataMessage += valueData.Code + " - " + valueData.Description + "\n"
