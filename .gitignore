@@ -1,3 +1,4 @@
 main.exe
 apikey
-client_secret.json
+*.json
+telegramToken

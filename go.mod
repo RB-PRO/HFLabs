@@ -3,6 +3,7 @@ module github.com/RB-PRO/HFLabs
 go 1.20
 
 require (
+	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
 	github.com/gocolly/colly/v2 v2.1.0
 	golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be
 	gopkg.in/Iwark/spreadsheet.v2 v2.0.0-20220412131121-41eea1483964
