@@ -15,7 +15,7 @@ type RBsheet struct {
 }
 
 // Создать экземпляр листа, с которым будет работать скрипт
-func NewSheets() (RBsheet, error) {
+func NewSheets(SpreadsheetID string) (RBsheet, error) {
 
 	// Загружаем секретный ключ
 	data, err := os.ReadFile("client_secret.json")
@@ -32,7 +32,7 @@ func NewSheets() (RBsheet, error) {
 	service := spreadsheet.NewServiceWithClient(client)
 
 	// Получаем экземпляр книги
-	spreadsheet, err := service.FetchSpreadsheet("1aDy5lhQV8B1ZRio_HNk02xL8qZ7g_5EqL5Q5cPj-MMU")
+	spreadsheet, err := service.FetchSpreadsheet(SpreadsheetID)
 	if err != nil {
 		return RBsheet{}, err
 	}

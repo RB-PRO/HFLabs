@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -23,7 +22,7 @@ func Run() {
 	}
 
 	// Подключаемся к Google Sheet
-	sheetLogin, sheetLoginError := RBgoogle.NewSheets()
+	sheetLogin, sheetLoginError := RBgoogle.NewSheets(spreadsheetID)
 	if sheetLoginError != nil {
 		log.Fatalln(sheetLoginError)
 	}
@@ -56,7 +55,7 @@ func Run() {
 		// Собираем сообщение для отправки
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
 
-		// Extract the command from the Message.
+		// Слушаем только команды
 		switch update.Message.Command() {
 		case "start":
 			msg.Text = "Привет. Я бот, который обновит данные в таблице\n" +
@@ -102,9 +101,6 @@ func Run() {
 			log.Panic(err)
 		}
 	}
-
-	fmt.Println(sheetLogin.Cell(0, 0))
-
 }
 
 // Получение значение из файла
