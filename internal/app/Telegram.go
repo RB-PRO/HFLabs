@@ -11,18 +11,61 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
+func TEstBot() {
+	bot, err := tgbotapi.NewBotAPI(os.Getenv("5821316325:AAHfihGQGrvw7nQ-5yC2FvzGfKhAZlwLkCQ"))
+	if err != nil {
+		log.Panic(err)
+	}
+
+	bot.Debug = true
+
+	log.Printf("Authorized on account %s", bot.Self.UserName)
+
+	u := tgbotapi.NewUpdate(0)
+	u.Timeout = 60
+
+	updates := bot.GetUpdatesChan(u)
+
+	for update := range updates {
+		if update.Message == nil { // ignore any non-Message updates
+			continue
+		}
+
+		if !update.Message.IsCommand() { // ignore any non-command Messages
+			continue
+		}
+
+		// Create a new MessageConfig. We don't have text yet,
+		// so we leave it empty.
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
+
+		// Extract the command from the Message.
+		switch update.Message.Command() {
+		case "help":
+			msg.Text = "I understand /sayhi and /status."
+		case "sayhi":
+			msg.Text = "Hi :)"
+		case "status":
+			msg.Text = "I'm ok."
+		default:
+			msg.Text = "I don't know that command"
+		}
+
+		if _, err := bot.Send(msg); err != nil {
+			log.Panic(err)
+		}
+	}
+}
 func Run() {
 
 	spreadsheetID := "1aDy5lhQV8B1ZRio_HNk02xL8qZ7g_5EqL5Q5cPj-MMU" // ID книги
 	gid := "1303466946"                                             // ID листа
 
-	/*
-		// Получить токен для телеграм бота
-		tokenTelegram, errorFile := dataFile("telegramToken")
-		if errorFile != nil {
-			log.Fatalln(errorFile)
-		}
-	*/
+	// Получить токен для телеграм бота
+	tokenTelegram, errorFile := dataFile("telegramToken")
+	if errorFile != nil {
+		log.Fatalln(errorFile)
+	}
 
 	// Подключаемся к Google Sheet
 	sheetLogin, sheetLoginError := RBgoogle.NewSheets()
@@ -31,12 +74,12 @@ func Run() {
 	}
 
 	// Запускаем бота
-	bot, errNewBot := tgbotapi.NewBotAPI(os.Getenv("5821316325:AAEw9tge3csf-6gIOzTJK7NGwh_zsw-ooIU"))
+	bot, errNewBot := tgbotapi.NewBotAPI(os.Getenv(tokenTelegram))
 	if errNewBot != nil {
 		log.Fatalln(errNewBot)
 	}
 	bot.Debug = true
-	log.Printf("Authorized on account %s", bot.Self.UserName)
+	log.Printf("Авторизовался %s", bot.Self.UserName)
 
 	// Настройка бота
 	u := tgbotapi.NewUpdate(0)
